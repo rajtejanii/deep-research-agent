@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  deep-research-agent:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      # This magical URL tells the Docker container to route traffic 
+      # out to your host Windows machine where Ollama is running.
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      # This maps the database file so it persists even if the container is destroyed
+      - ./research_memory.db:/app/research_memory.db
+      - ./research_memory.db-wal:/app/research_memory.db-wal
+      - ./research_memory.db-shm:/app/research_memory.db-shm

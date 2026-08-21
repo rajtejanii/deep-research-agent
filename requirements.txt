@@ -1,0 +1,8 @@
+streamlit
+langgraph
+langchain
+langchain-ollama
+ddgs
+langchain-community
+langgraph-checkpoint-sqlite
+pydantic
