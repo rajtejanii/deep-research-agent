@@ -1,24 +1,19 @@
-# 🧠 Deep Research Meta-Agent
+# Deep Research Meta-Agent
 ### Autonomous, Parallelized, and Self-Reflecting AI Research Architecture
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![LangGraph](https://img.shields.io/badge/LangGraph-Stateful_Orchestration-orange.svg)](https://python.langchain.com/v0.1/docs/langgraph/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
+## Abstract & Overview
+The Deep Research Meta-Agent is a multi-agent AI system designed to automate web research, citation auditing, and report synthesis. 
 
-## 📖 Abstract & Overview
+The system is modeled as a deterministic state machine. It utilizes dynamic Map-Reduce parallelism to execute web searches concurrently, enforces Human-in-the-Loop (HITL) checkpoints, and features a reflection loop that identifies knowledge gaps and triggers targeted research.
 
-The Deep Research Meta-Agent is a production-ready, multi-agent AI system designed to automate comprehensive web research, citation auditing, and report synthesis. 
-
-Unlike traditional linear LLM wrappers that suffer from context bloat and hallucination, this system is modeled as a deterministic **State Machine**. It utilizes dynamic **Map-Reduce parallelism** to scrape the web concurrently, enforces strict **Human-in-the-Loop (HITL)** safety gates before consuming compute, and features a self-correcting **Reflection Loop** that automatically identifies knowledge gaps and re-triggers targeted research until the final report is analytically complete.
-
-## 🚀 Key Engineering Innovations
+## Key Engineering Innovations
 
 * **Dynamic Map-Reduce Parallelism (Fan-Out/Fan-In):** Utilizes LangGraph's `Send` API to spawn independent, parallel sub-agents for each sub-topic. This prevents sequential network bottlenecking and drastically reduces total execution time.
 * **Compiler-Level Data Validation:** Binds the LLM to strict `Pydantic` JSON schemas, completely eliminating string-parsing errors, formatting hallucinations, and runtime exceptions.
 * **Stateful Checkpointing (SQLite WAL):** Conversational memory and graph state are persisted locally using an SQLite database configured in Write-Ahead Logging (WAL) mode, allowing high-throughput concurrent reads/writes from parallel agents.
 * **Human-in-the-Loop (HITL) Execution:** Implements hard `interrupt()` circuit breakers. The graph serializes its state to disk and suspends execution indefinitely until a human operator reviews and authorizes the AI's search plan.
 
-## 📐 System Architecture & Workflow
+## System Architecture & Workflow
 
 The architecture separates the planning (Supervisor) from the execution (Searchers) to prevent context degradation. 
 
@@ -53,7 +48,7 @@ graph TD
 3. **The Synthesizer:** Aggregates the raw, noisy data from the parallel workers and compiles a structured, cohesive markdown draft.
 4. **The Critic:** The reflection engine. It evaluates the Synthesizer's draft against the original user prompt. If critical data is missing, it outputs new targeted search queries and conditionally routes the graph back to the Execution Layer.
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 deep-research-agent/
@@ -68,7 +63,7 @@ deep-research-agent/
 └── README.md           # System documentation
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Orchestration:** LangGraph, LangChain
 * **LLM Backend:** Local Ollama (`llama3.2`) for zero-cost, private inference
@@ -77,7 +72,7 @@ deep-research-agent/
 * **State Persistence:** SQLite3
 * **Frontend:** Streamlit
 
-## ⚙️ Quick Start (Docker Deployment)
+## Quick Start (Docker Deployment)
 
 Deploying the architecture via Docker ensures a reproducible, isolated environment.
 
@@ -97,7 +92,7 @@ Deploying the architecture via Docker ensures a reproducible, isolated environme
 4. **Access the Interface:**
    Open your browser and navigate to `http://localhost:8501`.
 
-## 💻 Local Development (Virtual Environment)
+## Local Development (Virtual Environment)
 
 To run the system directly on your host machine for development or debugging:
 ```bash
@@ -112,13 +107,3 @@ pip install -r requirements.txt
 # 3. Launch the Streamlit dashboard
 streamlit run app.py
 ```
-
-## 🔮 Future Roadmap
-
-* **Citation Auditing:** Upgrade the Critic node to verify that every claim in the final report maps back to a specific URL retrieved by the Searchers.
-* **Vector Database Integration:** Connect a local instance of Milvus or ChromaDB to allow the system to search against local PDF documents alongside the open web.
-* **Credibility Scoring:** Implement a pre-processing filter to score web domains (0-100), automatically rejecting hallucinated or low-authority sources before they reach the Synthesizer.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
